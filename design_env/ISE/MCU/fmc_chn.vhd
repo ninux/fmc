@@ -132,6 +132,7 @@ begin
 		  stp_ctr <= 0;
 		  fmc_dir <= not fmc_dir;
 		end if;
+	 end if;
   end process;
 
 end rtl;
