@@ -33,7 +33,13 @@ architecture rtl of fmc_top is
   signal chn_enb_reg  : std_logic_vector(FMC_NUM_CHN-1 downto 0);
   signal tmp_ctrl_reg : std_logic_vector(9 downto 0);
   -- prescaler signals
-  signal tick_dur, tick_nco : std_logic;
+  signal tick_dur_cnt: unsigned(19 downto 0);	-- counter for duration generation
+  signal tick_nco_cnt: unsigned(5 downto 0);	-- counter for nco generation
+  signal speed_factor : unsigned(9 downto 0); -- speed factor
+  signal tick_dur : std_logic;				-- divided down clock for tone duration nominal 1kHz
+  signal tick_nco : std_logic;				-- divided down clock for NCO nominal 1MHz
+  constant duration_end_time : unsigned(15 downto 0) := 5000;
+  constant nco_end_time : unsigned(5 downto 0) := 50;
   
 begin
 
@@ -116,5 +122,29 @@ begin
                 fmc_stp  => fmc_step(i)
                );
   end generate;
+  
+  -----------------------------------------------------------
+  -- Generates divided down clock signals
+  -----------------------------------------------------------
+  P_clock_generator: process(rst, clk)
+  begin
+    if rst = '1' then
+		tick_dur_cnt <= (others=>'0');
+		tick_nco_cnt <= (others=>'0');
+		tick_dur 	<= '0';
+		tick_nco : 	<= '0';
+    elsif rising_edge(clk) then
+		  tick_nco <= '0';		-- default low
+		  tick_dur <= '0';		-- default low
+		  tick_dur_cnt <= tick_dur_cnt + 1;
+		  tick_nco_cnt <= tick_nco_cnt + 1;
+		  if tick_dur_cnt = (dur_end_time*speed_factor)(25 downto 5) then
+			  tick_dur <= '1';		-- 1kHz clock edge
+		  end if
+		  
+		  if tick_nco_cnt = nco_end_time then
+		     tick_nco <= '1';		-- 1MHz clock edge
+		  end if
+  end process;
 
 end rtl;
