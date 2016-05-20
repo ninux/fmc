@@ -49,7 +49,11 @@ architecture rtl of rom is
     OPC(setih) & reg(4) & n2slv(16#03#, DW/2),         -- setih r4, 0x03 (set high byte of config address)		
 		OPC(st)    & reg(3) & reg(4) & "-----",            -- FMC_CHN_ENB = 0xFF
 		-- initialize FMC module - configure speed factor
-		OPC(setil) & 
+		OPC(setil) & reg(3) & n2slv(16#04#, DW/2),         -- setil r3, 0x04
+		OPC(setih) & reg(3) & n2slv(16#00#, DW/2),         -- setih r3, 0x00
+		OPC(setil) & reg(4) & n2slv(16#41#, DW/2),         -- setil r4, 0x41
+		OPC(setih) & reg(4) & n2slv(16#03#, DW/2),         -- setih r4, 0x03
+		OPC(st)    & reg(3) & reg(4) & "-----",            -- SPD_FAC = 0x0400
     --------------------------------------------------------------------------
     -- addr 0x00A: start of end-less loop
        -- outer for-loop (r2)
