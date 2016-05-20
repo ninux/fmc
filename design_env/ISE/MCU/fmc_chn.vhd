@@ -122,17 +122,17 @@ begin
 		stp_old <= '0';
 		fmc_dir <= '0';
     elsif rising_edge(clk) then
-	   -- update and check step status
-	   stp_old <= fmc_stp;
+	    -- update and check step status
+	    stp_old <= fmc_stp;
       if stp_old = '0' and fmc_stp = '1' then
-		  stp_ctr <= stp_ctr + 1;
-	   end if;
-	   -- check step count
+		    stp_ctr <= stp_ctr + 1;
+	    end if;
+	    -- check step count
       if stp_ctr >= 80 then
-		  stp_ctr <= 0;
-		  fmc_dir <= not fmc_dir;
-		end if;
-	 end if;
+		    stp_ctr <= 0;
+		    fmc_dir <= not fmc_dir;
+		  end if;
+	  end if;
   end process;
 
 end rtl;
