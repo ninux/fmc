@@ -1,0 +1,22 @@
+Release 13.3 - netgen O.76xd (nt)
+Copyright (c) 1995-2011 Xilinx, Inc.  All rights reserved.
+
+Command Line: netgen -filter
+F:/add/MCU_Project/design_env/ISE/MCU/iseconfig/filter.filter -intstyle ise -ar
+Structure -tm mcu -w -dir netgen/synthesis -ofmt vhdl -sim mcu.ngc
+mcu_synthesis.vhd  
+
+Reading design 'mcu.ngc' ...
+Flattening design ...
+Processing design ... 
+  Preping design's networks ...
+  Preping design's macros ...
+Writing VHDL netlist
+'\\vboxsrv\studium\add\MCU_Project\design_env\ISE\MCU\netgen\synthesis\mcu_synth
+esis.vhd' ...
+INFO:NetListWriters:635 - The generated VHDL netlist contains Xilinx UNISIM
+   simulation primitives and has to be used with UNISIM library for correct
+   compilation and simulation. 
+Number of warnings: 0
+Number of info messages: 1
+Total memory usage is 170188 kilobytes
