@@ -43,11 +43,13 @@ architecture rtl of rom is
     OPC(setil) & reg(5) & n2slv(16#03#, DW/2),         -- setil r5, 0x03 (LED(1:0))
     OPC(setil) & reg(6) & n2slv(16#0C#, DW/2),         -- setil r6, 0x0C (LED(3:2))
     OPC(setil) & reg(7) & n2slv(16#30#, DW/2),         -- setil r7, 0x30 (LED(5:4))
-		-- initialize FMC module (channel enable, speed factor)
+		-- initialize FMC module - configure channels
 		OPC(setil) & reg(3) & n2slv(16#FF#, DW/2),         -- setil r3, 0xFF (enable all FMC channels)
 		OPC(setil) & reg(4) & n2slv(16#40#, DW/2),         -- setil r4, 0x40 (set low byte of config address)
     OPC(setih) & reg(4) & n2slv(16#03#, DW/2),         -- setih r4, 0x03 (set high byte of config address)		
 		OPC(st)    & reg(3) & reg(4) & "-----",            -- FMC_CHN_ENB = 0xFF
+		-- initialize FMC module - configure speed factor
+		OPC(setil) & 
     --------------------------------------------------------------------------
     -- addr 0x00A: start of end-less loop
        -- outer for-loop (r2)
