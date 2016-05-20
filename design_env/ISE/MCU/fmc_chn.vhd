@@ -48,8 +48,12 @@ architecture rtl of fmc_chn is
   -- Step Counter
   signal stp_ctr : unsigned(6 downto 0);  --  7 bit step counter
   signal stp_old : std_logic;             --  1 bit old step memory
+  signal fmc_stp_tmp : std_logic;          --  1 bit to read the output internally
   
 begin
+
+  -- concurrent assignment
+  fmc_stp_tmp <= fmc_stp;
   
 -- dummy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   fmc_enb <= tone_duration(0);
@@ -123,8 +127,8 @@ begin
 		fmc_dir <= '0';
     elsif rising_edge(clk) then
 	    -- update and check step status
-	    stp_old <= fmc_stp;
-      if stp_old = '0' and fmc_stp = '1' then
+	    stp_old <= fmc_stp_tmp;
+      if stp_old = '0' and fmc_stp_tmp = '1' then
 		    stp_ctr <= stp_ctr + 1;
 	    end if;
 	    -- check step count
