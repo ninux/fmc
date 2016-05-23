@@ -48,13 +48,19 @@ architecture rtl of fmc_chn is
   -- Step Counter
   signal stp_ctr : unsigned(6 downto 0);  --  7 bit step counter
   signal stp_old : std_logic;             --  1 bit old step memory
+  signal fmc_stp_tmp : std_logic;         --  1 bit to read the step output internally
+  signal fmc_dir_tmp : std_logic;         --  1 bit to read the direction output internally
   
 begin
+
+  -- concurrent assignments
+  fmc_stp <= fmc_stp_tmp;
+  fmc_dir <= fmc_dir_tmp;
+  fmc_enb <= '0' when to_integer(unsigned(tone_number)) = 0 else '1';
   
 -- dummy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   fmc_enb <= tone_duration(0);
-  fmc_dir <= tone_duration(2);
-  fmc_stp <= std_logic(nco_reg(nco_reg'left)); -- MSB of NCO is desired frequency
+  fmc_stp_tmp <= std_logic(nco_reg(nco_reg'left)); -- MSB of NCO is desired frequency
 
   -----------------------------------------------------------------------------
   -- ROM addressing and tick counting
@@ -124,14 +130,14 @@ begin
 		fmc_dir <= '0';
     elsif rising_edge(clk) then
 	    -- update and check step status
-	    stp_old <= fmc_stp;
-      if stp_old = '0' and fmc_stp = '1' then
+	    stp_old <= fmc_stp_tmp;
+      if stp_old = '0' and fmc_stp_tmp = '1' then
 		    stp_ctr <= stp_ctr + 1;
 	    end if;
 	    -- check step count
       if stp_ctr >= 80 then
-		    stp_ctr <= 0;
-		    fmc_dir <= not fmc_dir;
+		    stp_ctr <= (others => '0');
+		    fmc_dir <= not fmc_dir_tmp;
 		  end if;
 	  end if;
   end process;

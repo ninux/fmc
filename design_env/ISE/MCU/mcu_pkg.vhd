@@ -77,9 +77,6 @@ package mcu_pkg is
   constant FMC_TON_WW    : natural range 1 to 16 :=  6;             -- FMC duration word width
   constant FMC_DUR_WW    : natural range 1 to 16 := 14;             -- FMC tone word width
   constant FMC_LAST_TONE : unsigned(9 downto 0) := (others => '1'); -- last-tone indicator
-  constant c_addr_fmc_chn_enb  : std_logic_vector(AWL-1 downto 0) := n2slv( 0, AWL);
-  constant c_addr_fmc_tmp_ctrl : std_logic_vector(AWL-1 downto 0) := n2slv( 1, AWL);
-  type t_fmc_addr_sel is (none, fmc_chn_enb, fmc_tmp_ctrl);
   -- TIM
   -- UART
 
