@@ -66,6 +66,7 @@ begin
       tone_end_evt <= '0';
       rom_addr     <= (others => '0');
     elsif rising_edge(clk) then
+		tone_end_evt <= '0';
       -- maintain tone duration counter
       if tick_dur = '1' then
         if duration_cnt = tone_duration then

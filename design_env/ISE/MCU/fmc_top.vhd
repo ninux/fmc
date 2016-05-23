@@ -132,7 +132,7 @@ begin
 		tick_dur_cnt <= (others=>'0');
 		tick_nco_cnt <= (others=>'0');
 		tick_dur 	<= '0';
-		tick_nco : 	<= '0';
+		tick_nco		<= '0';
     elsif rising_edge(clk) then
 		  tick_nco <= '0';		-- default low
 		  tick_dur <= '0';		-- default low
@@ -140,11 +140,13 @@ begin
 		  tick_nco_cnt <= tick_nco_cnt + 1;
 		  if tick_dur_cnt = (dur_end_time*speed_factor)(25 downto 5) then
 			  tick_dur <= '1';		-- 1kHz clock edge
-		  end if
+			  tick_dur_cnt <= (others=>'0'); -- reset counter
+		  end if;
 		  
 		  if tick_nco_cnt = nco_end_time then
 		     tick_nco <= '1';		-- 1MHz clock edge
-		  end if
+			  tick_nco_cnt <= (others=>'0');	-- reset counter
+		  end if;
   end process;
 
 end rtl;
