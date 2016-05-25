@@ -37,11 +37,11 @@ architecture rtl of fmc_chn is
   signal tone_number : std_logic_vector(FMC_TON_WW-1 downto 0);
   signal tone_end_evt : std_logic;
   -- LUT: tone number ==> NCO seed
-  type t_nco_lut is array (0 to 2**FMC_TON_WW-1) of natural;
+  type t_nco_lut is array (2**FMC_TON_WW-1 downto 0) of natural;
   constant nco_lut : t_nco_lut := (
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7382,6968,6577,6207,5859,5530,5220,4927,4650,4389,4143,3910,3691,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,7382,6968,6577,6207,5859,5530,5220,4927,4650,4389,4143,3910,3691,
     3484,3288,3104,2930,2765,2610,2463,2325,2195,2071,1955,1845,1742,1644,1552,1465,1383,1305,1232,
-    1163,1097,1036,978,923,871,822,776,732,691,652,616,581,549,518,489,461);
+    1163,1097,1036,978,923,871,822,776,732,691,652,616,581,549,518,489,461,0);
   -- NCO signals
   signal seed    : unsigned(12 downto 0); -- 13 bit seed
   signal nco_reg : unsigned(23 downto 0); -- 24 bit NCO
@@ -72,7 +72,6 @@ begin
       tone_end_evt <= '0';
       rom_addr     <= (others => '0');
     elsif rising_edge(clk) then
-		tone_end_evt <= '0';
       -- maintain tone duration counter
       if tick_dur = '1' then
         if duration_cnt = tone_duration then
