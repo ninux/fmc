@@ -64,7 +64,11 @@ package mcu_pkg is
   constant c_addr_gpio_data_in  : std_logic_vector(AWL-1 downto 0) := n2slv( 0, AWL);
   constant c_addr_gpio_data_out : std_logic_vector(AWL-1 downto 0) := n2slv( 1, AWL);
   constant c_addr_gpio_out_enb  : std_logic_vector(AWL-1 downto 0) := n2slv( 2, AWL);
-  type t_gpio_addr_sel is (none, gpio_data_in, gpio_data_out, gpio_enb);
+  constant c_addr_enc_ctrl      : std_logic_vector(AWL-1 downto 0) := n2slv( 3, AWL);
+  constant c_addr_enc_dist      : std_logic_vector(AWL-1 downto 0) := n2slv( 4, AWL);
+  constant c_addr_enc_pos       : std_logic_vector(AWL-1 downto 0) := n2slv( 5, AWL);
+  constant c_addr_enc_neg       : std_logic_vector(AWL-1 downto 0) := n2slv( 6, AWL);
+  type t_gpio_addr_sel is (none, gpio_data_in, gpio_data_out, gpio_enb, enc_ctrl, enc_dist, enc_pos, enc_neg);
   -- FMC
  constant N_FMC : natural range 1 to 8 := 8; -- # of FMC channels
  constant N_FMC_SPD : natural range 1 to 1024 := 1; -- # of speed scaling factors (prescaler)
