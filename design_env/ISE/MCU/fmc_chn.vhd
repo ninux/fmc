@@ -59,7 +59,7 @@ begin
   fmc_enb <= '0' when to_integer(unsigned(tone_number)) = 0 else '1';
   
 -- dummy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  fmc_enb <= tone_duration(0);
+--fmc_enb <= tone_duration(0);
   fmc_stp_tmp <= std_logic(nco_reg(nco_reg'left)); -- MSB of NCO is desired frequency
 
   -----------------------------------------------------------------------------
@@ -126,7 +126,7 @@ begin
     if rst = '1' then
       stp_ctr <= (others => '0');
 		stp_old <= '0';
-		fmc_dir <= '0';
+		fmc_dir_tmp <= '0';
     elsif rising_edge(clk) then
 	    -- update and check step status
 	    stp_old <= fmc_stp_tmp;
@@ -136,7 +136,7 @@ begin
 	    -- check step count
       if stp_ctr >= 80 then
 		    stp_ctr <= (others => '0');
-		    fmc_dir <= not fmc_dir_tmp;
+		    fmc_dir_tmp <= not fmc_dir_tmp;
 		  end if;
 	  end if;
   end process;

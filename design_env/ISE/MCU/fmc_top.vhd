@@ -94,17 +94,17 @@ begin
     end if;
   end process;
 
-  -----------------------------------------------------------------------------
-  -- Clock Prescaler
-  -----------------------------------------------------------------------------
-  P_scl: process(clk)
-  begin
-    if rising_edge(clk) then
-      -- default assignment
-      tick_dur <= '1';
-      tick_nco <= '1';
-    end if;
-  end process;
+--  -----------------------------------------------------------------------------
+--  -- Clock Prescaler
+--  -----------------------------------------------------------------------------
+--  P_scl: process(clk)
+--  begin
+--    if rising_edge(clk) then
+--      -- default assignment
+--      tick_dur <= '1';
+--      tick_nco <= '1';
+--    end if;
+--  end process;
   
   -----------------------------------------------------------------------------
   -- Instantiation of FMC channels

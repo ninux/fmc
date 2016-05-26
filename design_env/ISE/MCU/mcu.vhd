@@ -16,12 +16,20 @@ use ieee.numeric_std.all;
 use work.mcu_pkg.all;
 
 entity mcu is
-  port(rst     : in    std_logic;
-       clk     : in    std_logic;
+  port(rst        : in    std_logic;
+       clk        : in    std_logic;
        -- LED(8:0) on S3E-Board (demonstrate tri-state buffers)
-       LED     : inout std_logic_vector(7 downto 0);
+       LED        : inout std_logic_vector(7 downto 0);
        -- SW(3:0) on S3E-Board
-       Switch  : in std_logic_vector(3 downto 0)
+       Switch     : in std_logic_vector(3 downto 0);
+		 -- Rotary encoder on S3E-Board
+		 ROT_A      : in std_logic;
+		 ROT_B      : in std_logic;
+		 ROT_CENTER : in std_logic;
+		 -- 
+		 FMC_ENB    : out  std_logic_vector(FMC_NUM_CHN-1 downto 0);
+       FMC_DIR    : out  std_logic_vector(FMC_NUM_CHN-1 downto 0);
+       FMC_STP   : out  std_logic_vector(FMC_NUM_CHN-1 downto 0)
        );
 end mcu;
 
@@ -125,7 +133,22 @@ begin
       bus_out      => gpio2bus,
       gpio_in      => gpio_in,
       gpio_out     => gpio_out,
-      gpio_out_enb => gpio_out_enb
+      gpio_out_enb => gpio_out_enb,
+		enc_a        => ROT_A,
+		enc_b        => ROT_B
     );
+	 
+  -- FMC ----------------------------------------------------------------------
+  i_fmc: entity work.fmc_top
+    port map(
+      rst          => rst,
+      clk          => clk,
+      bus_in       => bus2fmc,
+      bus_out      => fmc2bus,
+      fmc_enable   => FMC_ENB,
+      fmc_direct   => FMC_DIR,
+      fmc_step     => FMC_STP
+    );
+	   
     
 end rtl;
