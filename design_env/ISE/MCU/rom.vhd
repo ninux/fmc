@@ -36,11 +36,11 @@ architecture rtl of rom is
    OPC(setih) & reg(4) & n2slv(16#03#, DW/2),         -- setih r4, 0x03 (set high byte of config address)		
 	OPC(st)    & reg(3) & reg(4) & "-----",            -- FMC_CHN_ENB = 0xFF
 	-- initialize FMC module - configure speed factor
-	OPC(setil) & reg(3) & n2slv(16#04#, DW/2),         -- setil r3, 0x04
+	OPC(setil) & reg(3) & n2slv(16#40#, DW/2),         -- setil r3, 0x40
 	OPC(setih) & reg(3) & n2slv(16#00#, DW/2),         -- setih r3, 0x00
 	OPC(setil) & reg(4) & n2slv(16#41#, DW/2),         -- setil r4, 0x41
 	OPC(setih) & reg(4) & n2slv(16#03#, DW/2),         -- setih r4, 0x03
-	OPC(st)    & reg(3) & reg(4) & "-----",            -- SPD_FAC = 0x0400
+	OPC(st)    & reg(3) & reg(4) & "-----",            -- SPD_FAC = 0x0040
 	-- ROT_ENC module - Prepare Ctrl to set capture flag
    OPC(setil) & reg(0) & n2slv(16#01#, DW/2),         -- setil r0, 0x01
    OPC(setih) & reg(0) & n2slv(16#00#, DW/2),         -- setih r0, 0x00
@@ -64,7 +64,7 @@ architecture rtl of rom is
 		OPC(slai) & reg(6) & reg(5) & "-----",        -- sla r6, r5
 		OPC(slai) & reg(5) & reg(6) & "-----",        -- sla r5, r6		
 		-- update speed factor FMC module
-		OPC(mov)   & reg(4) & reg(5) & "-----",
+		OPC(st)   & reg(5) & reg(4) & "-----",
    -- End of endless loop
    OPC(jmp)   & "-00" & n2slv(16#0F#, AW-2),             -- jmp 0x00F
    ---------------------------------------------------------------------------

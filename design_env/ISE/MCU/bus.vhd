@@ -65,6 +65,7 @@ begin
   rom_out.addr  <= cpu_in.addr(AWL-1 downto 0);
   ram_out.addr  <= cpu_in.addr(AWL-1 downto 0);
   gpio_out.addr <= cpu_in.addr(AWL-1 downto 0);
+  fmc_out.addr  <= cpu_in.addr(AWL-1 downto 0);
   -- combinational process:
   -- determine addressed slave by decoding higher address bits
   -----------------------------------------------------------------------------
@@ -85,9 +86,11 @@ begin
   -- rom is read-only slave
   ram_out.data  <= cpu_in.data;
   gpio_out.data <= cpu_in.data;
+  fmc_out.data <= cpu_in.data;
   -- convey write enable from CPU to addressed slave only
   ram_out.wr_enb  <= cpu_in.wr_enb when bus_slave = RAM  else '0';
   gpio_out.wr_enb <= cpu_in.wr_enb when bus_slave = GPIO else '0';
+  fmc_out.wr_enb  <= cpu_in.wr_enb when bus_slave = FMC  else '0';
  
   -----------------------------------------------------------------------------
   -- read transfer logic
@@ -96,10 +99,12 @@ begin
   with bus_slave_reg select cpu_out.data <= rom_in.data      when ROM,
                                             ram_in.data      when RAM,
                                             gpio_in.data     when GPIO,
+														  fmc_in.data      when FMC,
                                             (others => '-')  when others;
   -- convey read enable from CPU to addressed slave only
   ram_out.rd_enb  <= cpu_in.rd_enb when bus_slave = RAM  else '0';
   gpio_out.rd_enb <= cpu_in.rd_enb when bus_slave = GPIO else '0';
+  fmc_out.rd_enb  <= cpu_in.rd_enb when bus_slave = FMC else '0';
   -- sequential process:
   -- register decode information to compensate read-latency of slaves
   -----------------------------------------------------------------------------  

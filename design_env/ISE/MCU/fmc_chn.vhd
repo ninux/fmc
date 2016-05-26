@@ -56,7 +56,7 @@ begin
   -- concurrent assignments
   fmc_stp <= fmc_stp_tmp;
   fmc_dir <= fmc_dir_tmp;
-  fmc_enb <= '0' when to_integer(unsigned(tone_number)) = 0 else '1';
+  fmc_enb <= '0' when unsigned(tone_number) = 0 else '1';
   
 -- dummy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --fmc_enb <= tone_duration(0);
