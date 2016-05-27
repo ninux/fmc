@@ -59,7 +59,6 @@ begin
   
 -- dummy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --fmc_enb <= tone_duration(0);
-  fmc_stp_tmp <= std_logic(nco_reg(nco_reg'left)); -- MSB of NCO is desired frequency
 
   -----------------------------------------------------------------------------
   -- ROM addressing and tick counting
@@ -133,6 +132,7 @@ begin
 		else
 			fmc_enb <= '1';
 		end if;
+		fmc_stp_tmp <= std_logic(nco_reg(nco_reg'left)); -- MSB of NCO is desired frequency
 	    -- update and check step status
 	    stp_old <= fmc_stp_tmp;
       if stp_old /= fmc_stp_tmp then
