@@ -82,3 +82,11 @@ _xmsgs/
 *.wdb
 *.xmsgs
 
+design_env/ISE/MCU/pa.fromNetlist.tcl
+design_env/ISE/MCU/planAhead_run_2/mcu.data/cache/mcu_ngc_bb389f70.edif
+design_env/ISE/MCU/planAhead_run_2/mcu.data/constrs_1/fileset.xml
+design_env/ISE/MCU/planAhead_run_2/mcu.data/runs/impl_1.psg
+design_env/ISE/MCU/planAhead_run_2/mcu.data/runs/runs.xml
+design_env/ISE/MCU/planAhead_run_2/mcu.data/sources_1/fileset.xml
+design_env/ISE/MCU/planAhead_run_2/mcu.data/wt/webtalk_pa.xml
+design_env/ISE/MCU/planAhead_run_2/mcu.ppr

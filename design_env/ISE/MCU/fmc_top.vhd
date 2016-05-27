@@ -125,21 +125,25 @@ begin
     elsif rising_edge(clk) then
 	   tick_dur_cnt <= tick_dur_cnt + 1;
 	   tick_nco_cnt <= tick_nco_cnt + 1;
+		tick_dur <= '0';
+		tick_nco <= '0';
 	   if tick_dur_cnt = duration_end_time then
-		  if tick_dur = '1' then
-			tick_dur <= '0';		-- 1kHz clock edge
-		  else	
-			tick_dur <= '1';		-- 1kHz clock edge
-		  end if;
-		  tick_dur_cnt <= (others=>'0'); -- reset counter
+--		  if tick_dur = '1' then
+--			tick_dur <= '0';		-- 1kHz clock edge
+--		  else	
+--			tick_dur <= '1';		-- 1kHz clock edge
+--		  end if;
+			tick_dur <= '1';
+			tick_dur_cnt <= (others=>'0'); -- reset counter
 	   end if;
 	  
 	   if tick_nco_cnt = nco_end_time then
-		  if tick_nco = '1' then
-			tick_nco <= '0';		-- 1MHz clock edge
-		  else	
-			tick_nco <= '1';		-- 1MHz clock edge
-		  end if;
+--		  if tick_nco = '1' then
+--			tick_nco <= '0';		-- 1MHz clock edge
+--		  else	
+--			tick_nco <= '1';		-- 1MHz clock edge
+--		  end if;
+			tick_nco <= '1';
 		  tick_nco_cnt <= (others=>'0');	-- reset counter
 	  end if;
 	   end if;
