@@ -114,8 +114,10 @@ begin
       seed    <= (others => '0');
       nco_reg <= (others => '0');
     elsif rising_edge(clk) then
-      seed    <= to_unsigned(nco_lut(to_integer(unsigned(tone_number))),13);
-      nco_reg <= nco_reg + seed;
+		if tick_nco = '1' then
+			seed    <= to_unsigned(nco_lut(to_integer(unsigned(tone_number))),13);
+			nco_reg <= nco_reg + seed;
+		end if;
     end if;
   end process;
   

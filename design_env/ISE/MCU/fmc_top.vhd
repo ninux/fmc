@@ -38,8 +38,8 @@ architecture rtl of fmc_top is
   --signal speed_factor : unsigned(9 downto 0); -- speed factor
   signal tick_dur : std_logic;				-- divided down clock for tone duration nominal 1kHz
   signal tick_nco : std_logic;				-- divided down clock for NCO nominal 1MHz
-  constant duration_end_time : integer := 25000;
-  constant nco_end_time : integer:=25;
+  constant duration_end_time : integer := 50000 -1;
+  constant nco_end_time : integer:=50 -1;
   
 begin
 
