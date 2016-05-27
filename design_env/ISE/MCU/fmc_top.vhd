@@ -38,8 +38,8 @@ architecture rtl of fmc_top is
   --signal speed_factor : unsigned(9 downto 0); -- speed factor
   signal tick_dur : std_logic;				-- divided down clock for tone duration nominal 1kHz
   signal tick_nco : std_logic;				-- divided down clock for NCO nominal 1MHz
-  constant duration_end_time : integer := 50;
-  constant nco_end_time : integer:=5000;
+  constant duration_end_time : integer := 25000;
+  constant nco_end_time : integer:=25;
   
 begin
 
@@ -94,18 +94,7 @@ begin
     end if;
   end process;
 
---  -----------------------------------------------------------------------------
---  -- Clock Prescaler
---  -----------------------------------------------------------------------------
---  P_scl: process(clk)
---  begin
---    if rising_edge(clk) then
---      -- default assignment
---      tick_dur <= '1';
---      tick_nco <= '1';
---    end if;
---  end process;
-  
+
   -----------------------------------------------------------------------------
   -- Instantiation of FMC channels
   -----------------------------------------------------------------------------  
@@ -134,17 +123,23 @@ begin
 		tick_dur 	<= '0';
 		tick_nco		<= '0';
     elsif rising_edge(clk) then
-	   tick_nco <= '0';		-- default low
-	   tick_dur <= '0';		-- default low
 	   tick_dur_cnt <= tick_dur_cnt + 1;
 	   tick_nco_cnt <= tick_nco_cnt + 1;
-	   if tick_dur_cnt = duration_end_time*unsigned(tmp_ctrl_reg) then
-		  tick_dur <= '1';		-- 1kHz clock edge
+	   if tick_dur_cnt = duration_end_time then
+		  if tick_dur = '1' then
+			tick_dur <= '0';		-- 1kHz clock edge
+		  else	
+			tick_dur <= '1';		-- 1kHz clock edge
+		  end if;
 		  tick_dur_cnt <= (others=>'0'); -- reset counter
 	   end if;
 	  
 	   if tick_nco_cnt = nco_end_time then
-		  tick_nco <= '1';		-- 1MHz clock edge
+		  if tick_nco = '1' then
+			tick_nco <= '0';		-- 1MHz clock edge
+		  else	
+			tick_nco <= '1';		-- 1MHz clock edge
+		  end if;
 		  tick_nco_cnt <= (others=>'0');	-- reset counter
 	  end if;
 	   end if;

@@ -130,7 +130,7 @@ begin
     elsif rising_edge(clk) then
 	    -- update and check step status
 	    stp_old <= fmc_stp_tmp;
-      if stp_old = '0' and fmc_stp_tmp = '1' then
+      if stp_old /= fmc_stp_tmp then
 		    stp_ctr <= stp_ctr + 1;
 	    end if;
 	    -- check step count
