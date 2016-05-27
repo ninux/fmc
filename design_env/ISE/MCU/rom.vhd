@@ -30,46 +30,76 @@ architecture rtl of rom is
     ---------------------------------------------------------------------------
     -- Opcode    Rdest    Rsrc1    Rsrc2               description
     ---------------------------------------------------------------------------
-    -- initialize FMC module - configure channels
-	OPC(setil) & reg(3) & n2slv(16#FF#, DW/2),         -- setil r3, 0xFF (enable all FMC channels)
-	OPC(setil) & reg(4) & n2slv(16#40#, DW/2),         -- setil r4, 0x40 (set low byte of config address)
-   OPC(setih) & reg(4) & n2slv(16#03#, DW/2),         -- setih r4, 0x03 (set high byte of config address)		
-	OPC(st)    & reg(3) & reg(4) & "-----",            -- FMC_CHN_ENB = 0xFF
-	-- initialize FMC module - configure speed factor
-	OPC(setil) & reg(3) & n2slv(16#40#, DW/2),         -- setil r3, 0x40
-	OPC(setih) & reg(3) & n2slv(16#00#, DW/2),         -- setih r3, 0x00
-	OPC(setil) & reg(4) & n2slv(16#41#, DW/2),         -- setil r4, 0x41
-	OPC(setih) & reg(4) & n2slv(16#03#, DW/2),         -- setih r4, 0x03
-	OPC(st)    & reg(3) & reg(4) & "-----",            -- SPD_FAC = 0x0040
-	-- ROT_ENC module - Prepare Ctrl to set capture flag
-   OPC(setil) & reg(0) & n2slv(16#01#, DW/2),         -- setil r0, 0x01
-   OPC(setih) & reg(0) & n2slv(16#00#, DW/2),         -- setih r0, 0x00
-   -- ROT_ENC module - Prepare ctrl address
-   OPC(setil) & reg(1) & n2slv(16#03#, DW/2),         -- setil r1, 0x03
-   OPC(setih) & reg(1) & n2slv(16#03#, DW/2),         -- setih r1, 0x30
-   -- ROT_ENC module - Prepare counter address
-   OPC(setil) & reg(2) & n2slv(16#04#, DW/2),         -- setil r2, 0x04
-   OPC(setih) & reg(2) & n2slv(16#03#, DW/2),         -- setih r2, 0x30
-	-- addr 0x00F: start of end-less loop
-      -- set capture flag
-      OPC(st)  & reg(0) & reg(1) & "-----",        -- st r0, r1
-      -- read counter
-      OPC(ld)  & reg(3) & reg(2) & "-----",        -- ld r3, r2
-		-- shift 7 times - TODO maybe to much?
-		OPC(slai) & reg(5) & reg(3) & "-----",        -- sla r5, r3 (r5 := (r3 << 1))
-		OPC(slai) & reg(6) & reg(5) & "-----",        -- sla r6, r5
-		OPC(slai) & reg(5) & reg(6) & "-----",        -- sla r5, r6
-		OPC(slai) & reg(6) & reg(5) & "-----",        -- sla r6, r5
-		OPC(slai) & reg(5) & reg(6) & "-----",        -- sla r5, r6
-		OPC(slai) & reg(6) & reg(5) & "-----",        -- sla r6, r5
-		OPC(slai) & reg(5) & reg(6) & "-----",        -- sla r5, r6		
-		-- update speed factor FMC module
-		OPC(st)   & reg(5) & reg(4) & "-----",
-   -- End of endless loop
-   OPC(jmp)   & "-00" & n2slv(16#0F#, AW-2),             -- jmp 0x00F
-   ---------------------------------------------------------------------------
-   others => OPC(nop)  & "-----------"                   -- NOP
-  );
+    -- configure FMC_CHN_ENB(7:0) to enable all channels
+    OPC(setil) & reg(3) & n2slv(16#40#, DW/2),         -- setil r3, 0x40
+    OPC(setih) & reg(3) & n2slv(16#03#, DW/2),         -- setih r3, 0x03
+    OPC(setil) & reg(4) & n2slv(16#FF#, DW/2),         -- setil r4, 0xFF
+    OPC(st)    & reg(4) & reg(3) & "00000",            -- CHN_ENB(7:0) = 0xFF
+    -- configure FMC_TMP_CTRL to speed-up factor of 1
+    OPC(setil) & reg(3) & n2slv(16#41#, DW/2),         -- setil r3, 0x41
+    OPC(setih) & reg(3) & n2slv(16#03#, DW/2),         -- setih r3, 0x03
+    OPC(setil) & reg(4) & n2slv(16#40#, DW/2),         -- setil r4, 0x40
+    OPC(setih) & reg(4) & n2slv(16#00#, DW/2),         -- setih r4, 0x00
+    OPC(st)    & reg(4) & reg(3) & "00000",            -- SPD_FAC(9:0)=0x040=1.00
+
+    OPC(jmp)   & "-00" & n2slv(16#09#, AW-2),             -- jmp 0x009
+
+
+    
+    
+    -- set GPIO(7:0) = LED(7:0) to Output
+    OPC(setil) & reg(3) & n2slv(16#02#, DW/2),         -- setil r3, 0x02
+    OPC(setih) & reg(3) & n2slv(16#03#, DW/2),         -- setih r3, 0x03
+    OPC(setil) & reg(4) & n2slv(16#FF#, DW/2),         -- setil r4, 0xFF
+    OPC(st)    & reg(4) & reg(3) & "00000",            -- GPIO_OUT_ENB = 0xFF
+    -- initialize GPIO data output values (permanently stored in r4) 
+    OPC(setil) & reg(3) & n2slv(16#01#, DW/2),         -- setil r3, 0x01
+    OPC(setil) & reg(4) & n2slv(16#2A#, DW/2),         -- setil r4, 0x2A (LED(7:0)=00101010)
+    OPC(st)    & reg(4) & reg(3) & "00000",            -- GPIO_DATA_OUT = 0x2A
+    -- initilize bit masks for toggling specific bits
+    OPC(setil) & reg(5) & n2slv(16#03#, DW/2),         -- setil r5, 0x03 (LED(1:0))
+    OPC(setil) & reg(6) & n2slv(16#0C#, DW/2),         -- setil r6, 0x0C (LED(3:2))
+    OPC(setil) & reg(7) & n2slv(16#30#, DW/2),         -- setil r7, 0x30 (LED(5:4))
+    ---------------------------------------------------------------------------
+    -- addr 0x00A: start of end-less loop
+       -- outer for-loop (r2)
+       -- init r2 = 0x0064 => 10 * 500 ms = 5 s
+       OPC(setil) & reg(2) & n2slv(16#0A#, DW/2),         -- setil r2, 0x0A
+       OPC(setih) & reg(2) & n2slv(16#00#, DW/2),         -- setih r2, 0x00
+          -- middle for-loop (r1)
+          -- init r1 = 0x0064 => 100 * 5 ms = 500 ms
+          OPC(setil) & reg(1) & n2slv(16#64#, DW/2),      -- setil r1, 0x64
+          OPC(setih) & reg(1) & n2slv(16#00#, DW/2),      -- setih r1, 0x00
+             -- inner for-loop (r0)
+             -- init r0 = 0x5161 => 20833 * 4 * 3 cc = 5 ms
+             OPC(setil) & reg(0) & n2slv(16#61#, DW/2),   -- setil r0, 0x61
+             OPC(setih) & reg(0) & n2slv(16#51#, DW/2),   -- setih r0, 0x51
+                -- execute
+                iw_nop,               
+                iw_nop,                       
+             -- check condition
+             OPC(addil) & reg(0) & n2slv(16#FF#, DW/2),   -- addil r0, 0xFF
+             OPC(bne)   & "-11"  & n2slv(16#FD#, AW-2),   -- bne 0x3FD (-3)
+             -- toggle LED(1:0)
+             OPC(xori)  & reg(4) & reg(4) & reg(5)& "00", -- apply bit mask     
+             OPC(st)    & reg(4) & reg(3) & "00000",      -- write new value to GPIO_DATA_OUT
+          -- check condition
+          OPC(addil) & reg(1) & n2slv(16#FF#, DW/2),      -- addil r1, 0xFF
+          OPC(bne)   & "-11"  & n2slv(16#F7#, AW-2),      -- bne 0x3F7 (-9)
+          -- toggle LED(3:2)
+          OPC(xori)  & reg(4) & reg(4) & reg(6)& "00",    -- apply bit mask     
+          OPC(st)    & reg(4) & reg(3) & "00000",         -- write new value to GPIO_DATA_OUT
+       -- check condition
+       OPC(addil) & reg(2) & n2slv(16#FF#, DW/2),         -- addil r2, 0xFF
+       OPC(bne)   & "-11"  & n2slv(16#F1#, AW-2),         -- bne 0x3F1 (-15)
+       -- toggle LED(3:2)
+       OPC(xori)  & reg(4) & reg(4) & reg(7)& "00",       -- apply bit mask     
+       OPC(st)    & reg(4) & reg(3) & "00000",            -- write new value to GPIO_DATA_OUT
+    -- end of end-less loop
+    OPC(jmp)   & "-00" & n2slv(16#0A#, AW-2),             -- jmp 0x00A
+    ---------------------------------------------------------------------------
+    others => iw_nop                   -- NOP
+         );
   
 begin
 

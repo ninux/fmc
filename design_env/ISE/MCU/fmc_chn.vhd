@@ -56,7 +56,6 @@ begin
   -- concurrent assignments
   fmc_stp <= fmc_stp_tmp;
   fmc_dir <= fmc_dir_tmp;
-  fmc_enb <= '0' when unsigned(tone_number) = 0 else '1';
   
 -- dummy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --fmc_enb <= tone_duration(0);
@@ -128,6 +127,12 @@ begin
 		stp_old <= '0';
 		fmc_dir_tmp <= '0';
     elsif rising_edge(clk) then
+		-- fmc_enb <= '1' when unsigned(tone_number) = 0 else '0';
+		if unsigned(tone_number) > 0 then
+			fmc_enb <= '0';
+		else
+			fmc_enb <= '1';
+		end if;
 	    -- update and check step status
 	    stp_old <= fmc_stp_tmp;
       if stp_old /= fmc_stp_tmp then

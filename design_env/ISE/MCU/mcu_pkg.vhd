@@ -80,7 +80,7 @@ package mcu_pkg is
   constant FMC_ROM_DW    : natural range 1 to 20 := 20;             -- FMC ROM data width
   constant FMC_TON_WW    : natural range 1 to 16 :=  6;             -- FMC duration word width
   constant FMC_DUR_WW    : natural range 1 to 16 := 14;             -- FMC tone word width
-  constant FMC_LAST_TONE : unsigned(9 downto 0) := (others => '1'); -- last-tone indicator
+  constant FMC_LAST_TONE : unsigned(FMC_DUR_WW-1 downto 0) := (others => '1'); -- last-tone indicator
   -- TIM
   -- UART
 
